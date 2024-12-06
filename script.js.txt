@@ -1,0 +1,60 @@
+let points = 0;
+let balance = 0;
+
+document.addEventListener('DOMContentLoaded', function() {
+    const savedName = localStorage.getItem('username');
+    const savedNumber = localStorage.getItem('usernumber');
+    const userModal = document.getElementById('usermodal');
+
+    if (savedName && savedNumber) {
+        document.getElementById('username').textContent = savedName;
+        document.getElementById('usernumber').textContent = savedNumber;
+    } else {
+        userModal.classList.add('active');
+    }
+
+    // Display points and balance
+    points = parseInt(localStorage.getItem('userpoints') || '0', 10);
+    balance = parseFloat(localStorage.getItem('userbalance') || '0.00');
+    updateBalance();
+});
+
+function saveUserInfo() {
+    const name = document.getElementById('inputname').value;
+    const number = document.getElementById('inputnumber').value;
+
+    if (name && number) {
+        localStorage.setItem('username', name);
+        localStorage.setItem('usernumber', number);
+        document.getElementById('username').textContent = name;
+        document.getElementById('usernumber').textContent = number;
+        document.getElementById('usermodal').classList.remove('active');
+    } else {
+        alert("Please enter both your name and number");
+    }
+}
+
+function showRewardAd() {
+    // Simulate ad completion
+    new Promise((resolve) => {
+        setTimeout(() => {
+            resolve("Ad completed");
+        }, 2000); // Simulating ad duration
+    })
+    .then(() => {
+        points += 10;
+        balance += 0.01;
+        localStorage.setItem('userpoints', points);
+        localStorage.setItem('userbalance', balance);
+        updateBalance();
+        alert('You have completed the task and earned 10 points!');
+    })
+    .catch(error => {
+        console.error('Ad error:', error);
+    });
+}
+
+function updateBalance() {
+    document.getElementById('userpoints').textContent = points;
+    document.getElementById('userbalance').textContent = balance.toFixed(2);
+}
